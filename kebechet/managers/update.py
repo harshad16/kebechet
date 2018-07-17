@@ -333,8 +333,8 @@ class UpdateManager(Manager):
     def _create_pipenv_environment(cls, input_file: str) -> None:
         """Create a pipenv environment - Pipfile and Pipfile.lock from requirements.in or requirements-dev.in file."""
         if os.path.isfile(input_file):
-            _LOGGER.info("Installing dependencies from "+input_file)
-            cls.run_pipenv('pipenv install -r '+input_file)
+            _LOGGER.info(f"Installing dependencies from {input_file}")
+            cls.run_pipenv(f'pipenv install -r {input_file}')
         else:
             raise DependencyManagementError(
                 "No dependency management found in the repo - no Pipfile nor requirements.in nor requirements-dev.in"
@@ -343,18 +343,20 @@ class UpdateManager(Manager):
     def _create_initial_lock(self, labels: list, pipenv_used: bool, req_dev: bool) -> bool:
         """Perform initial requirements lock into requirements.txt file."""
         # We use lock_func to optimize run - it will be called only if actual locking needs to be performed.
+        _LOGGER.info("Still working")
         if not pipenv_used and not os.path.isfile('requirements.txt') and not req_dev:
-            _LOGGER.info("Initial lock based on requirements.in will be done")
-            lock_func = self._pipenv_lock_requirements
+            _LOGGER.info("Initial lock based on requirements.in will be done kkll")
+            lock_func = partial(self._pipenv_lock_requirements, 'requirements.txt')
         elif not pipenv_used and not os.path.isfile('requirements-dev.txt') and req_dev:
             _LOGGER.info("Initial lock based on requirements-dev.in will be done")
-            lock_func = self._pipenv_lock_requirements
+            lock_func = partial(self._pipenv_lock_requirements, 'requirements-dev.txt')
         elif pipenv_used and not os.path.isfile('Pipfile.lock'):
             _LOGGER.info("Initial lock based on Pipfile will be done")
             lock_func = partial(self.run_pipenv, 'pipenv lock')
         else:
             return False
 
+        _LOGGER.info("Still working")
         branch_name = "kebechet-initial-lock"
         request = {mr for mr in self.sm.repository.merge_requests
                    if mr.head_branch_name == branch_name and mr.state in ('opened', 'open')}
