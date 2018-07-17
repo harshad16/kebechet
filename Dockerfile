@@ -11,7 +11,7 @@ ENV USER=kebechet \
 
 RUN \
     dnf install -y --setopt=tsflags=nodocs git python3-pip gcc redhat-rpm-config python3-devel which gcc-c++ &&\
-    pip3 install git+https://github.com/harshad16/kebechet@feature/req-dev-backup  &&\
+    pip3 install git+https://github.com/harshad16/kebechet@feature/req-dev-backup &&\
     mkdir -p /home/user/.ssh &&\
     chmod a+wr -R /etc/passwd /home/user
 

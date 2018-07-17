@@ -188,10 +188,11 @@ class UpdateManager(Manager):
                 raise DependencyManagementError(f"File {input_file} does not state fully locked "
                                                 f"dependencies: {line!r} is not fully qualified dependency")
             package_name, package_version = package_and_version
+            dev = True if req_dev else False
             result[package_name] = {
                 # FIXME: tabs?
                 'version': package_version.split(r' ', maxsplit=1)[0],
-                'dev': False
+                'dev': dev
             }
 
         return result
