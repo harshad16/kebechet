@@ -286,10 +286,8 @@ class UpdateManager(Manager):
     def _pipenv_lock_requirements(cls, output_file: str) -> None:
         """Perform pipenv lock into requirements.txt or requirements-dev.txt file."""
         result = cls.run_pipenv('pipenv lock -r ')
-        print(output_file)
         with open(output_file, 'w') as requirements_file:
             requirements_file.write(result)
-        print(os.path.isfile(output_file))
         
     def _create_update(self, dependency: str, package_version: str, old_version: str,
                        is_dev: bool = False, labels: list = None, old_environment: dict = None,
@@ -321,7 +319,7 @@ class UpdateManager(Manager):
         output_file = 'requirements-dev.txt' if req_dev else 'requirements.txt'
         self._pipenv_lock_requirements(output_file)
         merge_request = self._open_merge_request_update(
-            dependency, old_version, package_version, labels, [input_file], merge_request
+            dependency, old_version, package_version, labels, [output_file], merge_request
         )
         return old_version, package_version, merge_request.number
 
