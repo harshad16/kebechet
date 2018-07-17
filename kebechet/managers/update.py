@@ -366,6 +366,7 @@ class UpdateManager(Manager):
         commit_msg = "Initial dependency lock"
         if len(request) == 0:
             lock_func()
+            _LOGGER.info("checking fles"+str(files))
             self._git_push(commit_msg, branch_name, files)
             request = self.sm.open_merge_request(commit_msg, branch_name, body='', labels=labels)
             _LOGGER.info(f"Initial dependency lock present in PR #{request.number}")
