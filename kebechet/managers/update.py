@@ -288,7 +288,7 @@ class UpdateManager(Manager):
         result = cls.run_pipenv('pipenv lock -r ')
         with open(output_file, 'w') as requirements_file:
             requirements_file.write(result)
-        
+
     def _create_update(self, dependency: str, package_version: str, old_version: str,
                        is_dev: bool = False, labels: list = None, old_environment: dict = None,
                        merge_request: MergeRequest = None, pipenv_used: bool = True, req_dev: bool = False) -> typing.Union[tuple, None]:
@@ -345,10 +345,10 @@ class UpdateManager(Manager):
         # We use lock_func to optimize run - it will be called only if actual locking needs to be performed.
         if not pipenv_used and not os.path.isfile('requirements.txt') and not req_dev:
             _LOGGER.info("Initial lock based on requirements.in will be done")
-            lock_func = self._pipenv_lock_requirements(output_file='requirements.txt')
+            lock_func = self._pipenv_lock_requirements
         elif not pipenv_used and not os.path.isfile('requirements-dev.txt') and req_dev:
             _LOGGER.info("Initial lock based on requirements-dev.in will be done")
-            lock_func = self._pipenv_lock_requirements(output_file='requirements-dev.txt')
+            lock_func = self._pipenv_lock_requirements
         elif pipenv_used and not os.path.isfile('Pipfile.lock'):
             _LOGGER.info("Initial lock based on Pipfile will be done")
             lock_func = partial(self.run_pipenv, 'pipenv lock')
