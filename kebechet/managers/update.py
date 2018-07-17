@@ -286,6 +286,7 @@ class UpdateManager(Manager):
     def _pipenv_lock_requirements(cls, output_file: str) -> None:
         """Perform pipenv lock into requirements.txt or requirements-dev.txt file."""
         result = cls.run_pipenv('pipenv lock -r ')
+        _LOGGER.info(f"check file {output_file}")
         with open(output_file, 'w') as requirements_file:
             requirements_file.write(result)
 
@@ -345,7 +346,7 @@ class UpdateManager(Manager):
         # We use lock_func to optimize run - it will be called only if actual locking needs to be performed.
         _LOGGER.info("Still working")
         if not pipenv_used and not os.path.isfile('requirements.txt') and not req_dev:
-            _LOGGER.info("Initial lock based on requirements.in will be done kkll")
+            _LOGGER.info("Initial lock based on requirements.in will be done")
             lock_func = partial(self._pipenv_lock_requirements, 'requirements.txt')
         elif not pipenv_used and not os.path.isfile('requirements-dev.txt') and req_dev:
             _LOGGER.info("Initial lock based on requirements-dev.in will be done")
@@ -361,7 +362,7 @@ class UpdateManager(Manager):
         request = {mr for mr in self.sm.repository.merge_requests
                    if mr.head_branch_name == branch_name and mr.state in ('opened', 'open')}
         files = ['requirements.txt' if not req_dev else 'requirements-dev.txt' if not pipenv_used else 'Pipfile.lock']
-
+        _LOGGER.info("checking fles"+str(files))
         commit_msg = "Initial dependency lock"
         if len(request) == 0:
             lock_func()
