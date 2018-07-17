@@ -20,10 +20,11 @@
   tasks:
   - name: login to OpenShift using provided token
     command: "oc login {{ OCP_URL }} --insecure-skip-tls-verify=true --token {{ OCP_TOKEN }}"
-    changed_when: False
+    changed_when: false
 
   - name: "deleting Objects"
     command: "oc delete {{ item }} --namespace {{ KEBECHET_APPLICATION_NAMESPACE }}"
+    ignore_errors: true
     with_items:
       - "secret/kebechet-secret"
       - "configmap/kebechet-configmap"
@@ -32,6 +33,7 @@
 
   - name: "deleting Objects"
     command: "oc delete {{ item }} --namespace {{ KEBECHET_INFRA_NAMESPACE }}"
+    ignore_errors: true
     with_items:
       - "imagestreams/kebechet-job"
       - "template/kebechet-imagestream"

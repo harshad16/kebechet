@@ -286,7 +286,7 @@ class UpdateManager(Manager):
     def _pipenv_lock_requirements(cls, output_file: str) -> None:
         """Perform pipenv lock into requirements.txt or requirements-dev.txt file."""
         result = cls.run_pipenv('pipenv lock -r ')
-        with open(output_file, 'w') as requirements_file:
+        with open('requirements.txt', 'w') as requirements_file:
             requirements_file.write(result)
 
     def _create_update(self, dependency: str, package_version: str, old_version: str,
